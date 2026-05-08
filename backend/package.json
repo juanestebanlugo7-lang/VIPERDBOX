@@ -1,7 +1,7 @@
 {
   "name": "viperdbox-backend",
   "version": "1.0.0",
-  "description": "Backend for Viperdbox movie social app",
+  "description": "Backend de Viperdbox catalogo de peliculas",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
