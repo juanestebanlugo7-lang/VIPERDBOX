@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Viperdbox</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <script>
+    const token = localStorage.getItem('token');
+    if (token) window.location.href = '/catalog.html';
+    else window.location.href = '/login.html';
+  </script>
+</body>
+</html>

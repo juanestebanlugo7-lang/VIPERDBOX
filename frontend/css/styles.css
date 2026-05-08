@@ -1,0 +1,252 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #000000;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #F0F0F0;
+  line-height: 1.5;
+}
+
+.navbar {
+  background-color: #0F0F0F;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+  flex-wrap: wrap;
+}
+
+.logo a {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #E94560;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.8rem;
+}
+
+.nav-links a {
+  color: #E0E0E0;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.nav-links a:hover {
+  color: #E94560;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #E94560;
+  padding-left: 1rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-bar input {
+  flex: 2;
+  padding: 0.8rem 1.2rem;
+  background-color: #1A1A1A;
+  border: 1px solid #333;
+  border-radius: 30px;
+  color: white;
+  font-size: 1rem;
+}
+
+.search-bar input::placeholder {
+  color: #777;
+}
+
+.search-bar button {
+  background-color: #E94560;
+  border: none;
+  padding: 0 1.5rem;
+  border-radius: 30px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #c73e56;
+}
+
+#clearBtn {
+  background-color: #333;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.movie-card {
+  background-color: #1A1A1A;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid #222;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+.movie-card img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.movie-card h3 {
+  font-size: 1rem;
+  margin: 0.8rem;
+  color: #FFFFFF;
+}
+
+.movie-card p {
+  font-size: 0.85rem;
+  margin: 0 0.8rem 0.8rem;
+  color: #aaa;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 2rem 0;
+}
+
+.pagination button {
+  background-color: #1A1A1A;
+  border: 1px solid #333;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #E94560;
+}
+
+.pagination button:disabled {
+  background-color: #E94560;
+  opacity: 0.8;
+}
+
+/* Detalle de película */
+.movie-detail {
+  background-color: #1A1A1A;
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.movie-detail-poster img {
+  width: 300px;
+  border-radius: 12px;
+}
+
+.movie-detail-info {
+  flex: 1;
+}
+
+.movie-detail-info h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.movie-detail-info p {
+  margin: 0.5rem 0;
+}
+
+.back-btn {
+  background-color: #E94560;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+/* Login/Registro */
+.auth-container {
+  max-width: 400px;
+  margin: 3rem auto;
+  background-color: #1A1A1A;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid #333;
+}
+
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background-color: #0F0F0F;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: white;
+}
+
+.auth-container button {
+  width: 100%;
+  background-color: #E94560;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 30px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.auth-container button:hover {
+  background-color: #c73e56;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1rem;
+  color: #aaa;
+}
+
+.auth-footer a {
+  color: #E94560;
+  text-decoration: none;
+}
