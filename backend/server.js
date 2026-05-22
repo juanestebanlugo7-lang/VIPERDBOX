@@ -20,7 +20,7 @@ console.log('Sirviendo JS desde:', jsPath);
 app.use(express.static(viewsPath));        // Para HTML
 app.use('/css', express.static(cssPath));  // Para CSS (la URL /css/styles.css)
 app.use('/js', express.static(jsPath));    // Para JS (la URL /js/main.js)
-
+app.use('/api/admin', require('./routes/adminRoutes'));
 // ===== RUTAS DE LA API =====
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/movies', require('./routes/movieRoutes'));

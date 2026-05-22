@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Viperdbox</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><a href="/catalog.html">VIPERDBOX</a></div>
+        <div class="nav-links">
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/catalog.html">Películas</a>
+            <a href="/profile.html">Mi Perfil</a>
+            <a id="logoutBtn" style="cursor: pointer;">Cerrar sesión</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>👑 Panel de Administración</h1>
+
+        <!-- Tarjetas de estadísticas -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">Usuarios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalReviews">0</div>
+                <div class="stat-label">Reseñas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalMovies">0</div>
+                <div class="stat-label">Películas reseñadas</div>
+            </div>
+        </div>
+
+        <!-- Lista de usuarios -->
+        <div class="admin-section">
+            <h2>📋 Usuarios registrados</h2>
+            <div id="usersList" class="users-list">
+                <p>Cargando...</p>
+            </div>
+        </div>
+
+        <!-- Lista de reseñas con opción de eliminar -->
+        <div class="admin-section">
+            <h2>✍️ Reseñas recientes</h2>
+            <div id="reviewsList" class="reviews-list">
+                <p>Cargando...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script>
+        loadAdminDashboard();
+    </script>
+</body>
+</html>

@@ -757,3 +757,92 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 });
+async function loadAdminDashboard() {
+    const token = getToken();
+    if (!token) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/admin/dashboard`, { headers: getHeaders() });
+        if (res.status === 403) {
+            alert('No tienes permisos de administrador');
+            window.location.href = '/catalog.html';
+            return;
+        }
+        if (!res.ok) throw new Error('Error al cargar panel');
+
+        const data = await res.json();
+
+        // Actualizar estadísticas
+        document.getElementById('totalUsers').textContent = data.stats.totalUsers || 0;
+        document.getElementById('totalReviews').textContent = data.stats.totalReviews || 0;
+        document.getElementById('totalMovies').textContent = data.stats.totalMovies || 0;
+
+        // Mostrar usuarios (solo información, sin botones de promoción)
+        const usersDiv = document.getElementById('usersList');
+        if (data.users.length === 0) {
+            usersDiv.innerHTML = '<p>No hay usuarios registrados.</p>';
+        } else {
+            usersDiv.innerHTML = '';
+            data.users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'admin-user-item';
+                userDiv.innerHTML = `
+                    <div><strong>${user.name}</strong> (${user.email}) - Rol: ${user.role}</div>
+                `;
+                usersDiv.appendChild(userDiv);
+            });
+        }
+
+        // Mostrar reseñas con botón eliminar
+        const reviewsDiv = document.getElementById('reviewsList');
+        if (data.reviews.length === 0) {
+            reviewsDiv.innerHTML = '<p>No hay reseñas aún.</p>';
+        } else {
+            reviewsDiv.innerHTML = '';
+            data.reviews.forEach(review => {
+                const reviewDiv = document.createElement('div');
+                reviewDiv.className = 'admin-review-item';
+                reviewDiv.innerHTML = `
+                    <div><strong>${review.user_name}</strong> - ${review.movie_title} (⭐ ${review.rating}/10)</div>
+                    <div class="review-content-preview">${review.content.substring(0, 100)}${review.content.length > 100 ? '...' : ''}</div>
+                    <button class="btn-delete-review" data-review-id="${review.id}">🗑️ Eliminar reseña</button>
+                `;
+                reviewsDiv.appendChild(reviewDiv);
+            });
+        }
+
+        // Eventos para eliminar reseñas
+        document.querySelectorAll('.btn-delete-review').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const reviewId = btn.dataset.reviewId;
+                if (confirm('¿Eliminar esta reseña permanentemente?')) {
+                    try {
+                        const delRes = await fetch(`${API_BASE}/admin/reviews/${reviewId}`, {
+                            method: 'DELETE',
+                            headers: getHeaders()
+                        });
+                        if (delRes.ok) {
+                            btn.closest('.admin-review-item').remove();
+                            alert('Reseña eliminada');
+                            // Opcional: actualizar contadores (recargar o restar)
+                            const currentCount = parseInt(document.getElementById('totalReviews').textContent);
+                            document.getElementById('totalReviews').textContent = currentCount - 1;
+                        } else {
+                            alert('Error al eliminar');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Error de red');
+                    }
+                }
+            });
+        });
+
+    } catch (err) {
+        console.error('Error en loadAdminDashboard:', err);
+        document.getElementById('usersList').innerHTML = '<p>Error al cargar panel. Revisa consola.</p>';
+    }
+}
