@@ -1,252 +1,545 @@
+/* ============================================
+   VIPERDBOX - ESTILOS PRINCIPALES
+   Diseño oscuro, acentos rojos (#E94560)
+   ============================================ */
+
+/* ---------- RESET Y GLOBALES ---------- */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  background-color: #000000;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  color: #F0F0F0;
-  line-height: 1.5;
+    background-color: #000000;        /* Fondo negro puro */
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: #F0F0F0;
+    line-height: 1.5;
 }
 
+/* ---------- BARRA DE NAVEGACIÓN ---------- */
 .navbar {
-  background-color: #0F0F0F;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #222;
-  flex-wrap: wrap;
+    background-color: #0F0F0F;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #222;
+    flex-wrap: wrap;
 }
 
 .logo a {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #E94560;
-  text-decoration: none;
-  letter-spacing: 1px;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #E94560;
+    text-decoration: none;
+    letter-spacing: 1px;
 }
 
 .nav-links {
-  display: flex;
-  gap: 1.8rem;
+    display: flex;
+    gap: 1.8rem;
 }
 
 .nav-links a {
-  color: #E0E0E0;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
+    color: #E0E0E0;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .nav-links a:hover {
-  color: #E94560;
+    color: #E94560;
 }
 
+/* ---------- CONTENEDOR PRINCIPAL ---------- */
 .container {
-  max-width: 1400px;
-  margin: 2rem auto;
-  padding: 0 2rem;
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
 }
 
+/* ---------- TÍTULOS ---------- */
 h1 {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  border-left: 4px solid #E94560;
-  padding-left: 1rem;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #E94560;
+    padding-left: 1rem;
 }
 
+/* ---------- BARRA DE BÚSQUEDA Y FILTROS ---------- */
 .search-bar {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .search-bar input {
-  flex: 2;
-  padding: 0.8rem 1.2rem;
-  background-color: #1A1A1A;
-  border: 1px solid #333;
-  border-radius: 30px;
-  color: white;
-  font-size: 1rem;
+    flex: 2;
+    padding: 0.8rem 1.2rem;
+    background-color: #1A1A1A;
+    border: 1px solid #333;
+    border-radius: 30px;
+    color: white;
+    font-size: 1rem;
 }
 
 .search-bar input::placeholder {
-  color: #777;
+    color: #777;
 }
 
 .search-bar button {
-  background-color: #E94560;
-  border: none;
-  padding: 0 1.5rem;
-  border-radius: 30px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+    background-color: #E94560;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .search-bar button:hover {
-  background-color: #c73e56;
+    background-color: #c73e56;
 }
 
 #clearBtn {
-  background-color: #333;
+    background-color: #333;
 }
 
+/* ---------- GRID DE PELÍCULAS (TARJETAS) ---------- */
 .movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
 }
 
 .movie-card {
-  background-color: #1A1A1A;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s;
-  border: 1px solid #222;
+    background-color: #1A1A1A;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: 1px solid #222;
 }
 
 .movie-card:hover {
-  transform: translateY(-5px);
+    transform: translateY(-5px);
 }
 
 .movie-card img {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
 }
 
 .movie-card h3 {
-  font-size: 1rem;
-  margin: 0.8rem;
-  color: #FFFFFF;
+    font-size: 1rem;
+    margin: 0.8rem;
+    color: #FFFFFF;
 }
 
 .movie-card p {
-  font-size: 0.85rem;
-  margin: 0 0.8rem 0.8rem;
-  color: #aaa;
+    font-size: 0.85rem;
+    margin: 0 0.8rem 0.8rem;
+    color: #aaa;
 }
 
+/* ---------- PAGINACIÓN ---------- */
 .pagination {
-  display: flex;
-  justify-content: center;
-  gap: 0.6rem;
-  margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 2rem 0;
 }
 
 .pagination button {
-  background-color: #1A1A1A;
-  border: 1px solid #333;
-  color: white;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  cursor: pointer;
+    background-color: #1A1A1A;
+    border: 1px solid #333;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 .pagination button:hover:not(:disabled) {
-  background-color: #E94560;
+    background-color: #E94560;
 }
 
 .pagination button:disabled {
-  background-color: #E94560;
-  opacity: 0.8;
+    background-color: #E94560;
+    opacity: 0.8;
 }
 
-/* Detalle de película */
-.movie-detail {
-  background-color: #1A1A1A;
-  border-radius: 20px;
-  padding: 2rem;
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+/* ---------- VISTA DETALLE (MEJORADA) ---------- */
+.detail-wrapper {
+    display: flex;
+    gap: 2rem;
+    background-color: #0f0f0f;
+    border-radius: 24px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
 }
 
-.movie-detail-poster img {
-  width: 300px;
-  border-radius: 12px;
+.detail-poster {
+    flex: 0 0 300px;
 }
 
-.movie-detail-info {
-  flex: 1;
+.detail-poster img {
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
-.movie-detail-info h2 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+.detail-info {
+    flex: 1;
+    min-width: 250px;
 }
 
-.movie-detail-info p {
-  margin: 0.5rem 0;
+.detail-info h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.detail-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.rating-tmdb {
+    background-color: #1a1a1a;
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 30px;
+    margin-bottom: 1rem;
+}
+
+.stars {
+    color: #E94560;
+    font-weight: bold;
+}
+
+.votes {
+    color: #aaa;
+    margin-left: 0.5rem;
+}
+
+/* Botones de listas (Favoritas, Pendientes, Vistas) */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.list-btn {
+    background-color: #2A2A2A;
+    border: 1px solid #3a3a3a;
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #e0e0e0;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.list-btn:hover {
+    background-color: #E94560;
+    border-color: #E94560;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Sinopsis */
+.synopsis h3 {
+    font-size: 1.2rem;
+    margin: 1rem 0 0.5rem;
+    color: #E94560;
+}
+
+.synopsis p {
+    line-height: 1.5;
+    color: #ccc;
+}
+
+/* Botones de tráiler y volver */
+.trailer-link {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.trailer-btn, .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    border: none;
+}
+
+.trailer-btn {
+    background-color: #E94560;
+    color: white;
+    box-shadow: 0 2px 5px rgba(233, 69, 96, 0.3);
+}
+
+.trailer-btn:hover {
+    background-color: #c73e56;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(233, 69, 96, 0.4);
 }
 
 .back-btn {
-  background-color: #E94560;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 30px;
-  color: white;
-  cursor: pointer;
-  margin-top: 1rem;
+    background-color: #2A2A2A;
+    color: #e0e0e0;
+    border: 1px solid #3a3a3a;
 }
 
-/* Login/Registro */
+.back-btn:hover {
+    background-color: #3a3a3a;
+    color: white;
+    transform: translateY(-2px);
+    border-color: #E94560;
+}
+
+/* ---------- REPARTO PRINCIPAL ---------- */
+.cast-section {
+    margin-top: 2rem;
+}
+
+.cast-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #E94560;
+    padding-left: 1rem;
+}
+
+.cast-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+}
+
+.cast-card {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    text-align: center;
+    padding: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.cast-card:hover {
+    transform: scale(1.02);
+}
+
+.cast-card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.cast-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin: 0.2rem 0;
+}
+
+.cast-character {
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+/* ---------- RESEÑAS DE LA COMUNIDAD (TMDB) ---------- */
+.reviews-section {
+    margin-top: 2rem;
+}
+
+.reviews-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #E94560;
+    padding-left: 1rem;
+}
+
+.review-card {
+    background-color: #0f0f0f;
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.review-author {
+    font-weight: bold;
+    color: #E94560;
+}
+
+.review-rating {
+    background-color: #E94560;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.review-content {
+    color: #ccc;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.read-more {
+    color: #E94560;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+/* ---------- MODAL DE TRÁILER (YOUTUBE EMBED) ---------- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #000;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.close-modal:hover {
+    color: #E94560;
+}
+
+.modal-content iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+}
+
+/* ---------- PÁGINAS DE AUTENTICACIÓN (LOGIN/REGISTRO) ---------- */
 .auth-container {
-  max-width: 400px;
-  margin: 3rem auto;
-  background-color: #1A1A1A;
-  padding: 2rem;
-  border-radius: 20px;
-  border: 1px solid #333;
+    max-width: 400px;
+    margin: 3rem auto;
+    background-color: #1A1A1A;
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid #333;
 }
 
 .auth-container h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .auth-container input {
-  width: 100%;
-  padding: 0.8rem;
-  margin-bottom: 1rem;
-  background-color: #0F0F0F;
-  border: 1px solid #333;
-  border-radius: 8px;
-  color: white;
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    background-color: #0F0F0F;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: white;
 }
 
 .auth-container button {
-  width: 100%;
-  background-color: #E94560;
-  border: none;
-  padding: 0.8rem;
-  border-radius: 30px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+    width: 100%;
+    background-color: #E94560;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .auth-container button:hover {
-  background-color: #c73e56;
+    background-color: #c73e56;
 }
 
 .auth-footer {
-  text-align: center;
-  margin-top: 1rem;
-  color: #aaa;
+    text-align: center;
+    margin-top: 1rem;
+    color: #aaa;
 }
 
 .auth-footer a {
-  color: #E94560;
-  text-decoration: none;
+    color: #E94560;
+    text-decoration: none;
+}
+
+/* ---------- RESPONSIVE (MÓVILES Y TABLETS) ---------- */
+@media (max-width: 768px) {
+    .detail-wrapper {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .detail-poster {
+        flex: auto;
+        max-width: 250px;
+    }
+    .action-buttons {
+        justify-content: center;
+    }
+    .trailer-link {
+        justify-content: center;
+    }
+    .modal-content {
+        width: 95%;
+    }
+    .modal-content iframe {
+        height: 250px;
+    }
 }
