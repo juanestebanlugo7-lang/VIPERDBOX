@@ -160,6 +160,69 @@ function renderPagination(current, total, type) {
     };
     pagDiv.appendChild(nextBtn);
 }
+// ==================== DASHBOARD ====================
+async function loadDashboard() {
+    const token = getToken();
+    if (!token) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/dashboard`, { headers: getHeaders() });
+        if (!res.ok) throw new Error('Error al cargar estadísticas');
+        const data = await res.json();
+
+        // Actualizar tarjetas de estadísticas
+        document.getElementById('totalUsers').textContent = data.totalUsers;
+        document.getElementById('totalReviews').textContent = data.totalReviews;
+        document.getElementById('avgRating').textContent = data.avgRating.toFixed(1);
+
+        // Películas más comentadas (clickeables)
+        const topMoviesDiv = document.getElementById('topMovies');
+        if (data.topMovies.length === 0) {
+            topMoviesDiv.innerHTML = '<p>No hay reseñas aún.</p>';
+        } else {
+            topMoviesDiv.innerHTML = '';
+            data.topMovies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'top-movie-item';
+                movieCard.innerHTML = `
+                    <div class="movie-title">
+                        <a href="/movieDetail.html?id=${movie.movie_id}" class="movie-link">${movie.movie_title}</a>
+                    </div>
+                    <div class="movie-stats">⭐ ${movie.avg_rating} (${movie.review_count} reseñas)</div>
+                `;
+                topMoviesDiv.appendChild(movieCard);
+            });
+        }
+
+        // Actividad reciente (clickeable: nombre del usuario y película)
+        const activityDiv = document.getElementById('recentActivity');
+        if (data.recentActivity.length === 0) {
+            activityDiv.innerHTML = '<p>No hay actividad reciente.</p>';
+        } else {
+            activityDiv.innerHTML = '';
+            data.recentActivity.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-user">
+                        <a href="/otherProfile.html?id=${activity.user_id}" class="user-link">${activity.user_name}</a>
+                    </div>
+                    <div class="activity-review">
+                        <a href="/movieDetail.html?id=${activity.movie_id}" class="movie-link"><strong>${activity.movie_title}</strong></a> - ⭐ ${activity.rating}/10
+                    </div>
+                    <div class="activity-date">${new Date(activity.created_at).toLocaleString()}</div>
+                `;
+                activityDiv.appendChild(activityItem);
+            });
+        }
+    } catch (err) {
+        console.error('Error en loadDashboard:', err);
+        document.getElementById('topMovies').innerHTML = '<p>Error al cargar datos. Intenta de nuevo.</p>';
+    }
+}
 
 // ==================== DETALLE COMPLETO ====================
 async function loadMovieDetail() {
