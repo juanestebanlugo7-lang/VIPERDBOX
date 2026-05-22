@@ -147,35 +147,38 @@ async function loadMovieDetail() {
     container.innerHTML = '<div class="loading">Cargando detalles...</div>';
 
     try {
+        // Obtener datos de la película (TMDB + nuestras reseñas)
         const res = await fetch(`${API_BASE}/movies/${movieId}`, { headers: getHeaders() });
         const data = await res.json();
 
         if (!res.ok || !data.movie) {
-            container.innerHTML = `
-                <div class="error-container">
-                    <p>${data.error || 'No se pudo cargar la película.'}</p>
-                    <button class="back-btn" onclick="window.location.href='/catalog.html'">← Volver al catálogo</button>
-                </div>
-            `;
+            container.innerHTML = `<div class="error-container"><p>${data.error || 'No se pudo cargar la película.'}</p><button class="back-btn" onclick="window.location.href='/catalog.html'">← Volver al catálogo</button></div>`;
             return;
         }
 
         const movie = data.movie;
         const videos = data.videos || [];
         const credits = data.credits || [];
-        const reviews = data.reviews || [];
+        const tmdbReviews = data.reviews || [];
 
-        const posterUrl = movie.poster_path
-            ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
-            : 'https://via.placeholder.com/300x450?text=No+poster';
+        // Obtener promedio local y reseñas de nuestra BD
+        const localReviewsRes = await fetch(`${API_BASE}/movies/${movieId}/reviews`, { headers: getHeaders() });
+        const localReviews = localReviewsRes.ok ? await localReviewsRes.json() : [];
+        const avgRes = await fetch(`${API_BASE}/movies/${movieId}/average`, { headers: getHeaders() });
+        const avgData = avgRes.ok ? await avgRes.json() : { average: 0, total: 0 };
+        const communityAvg = avgData.average;
+        const totalCommunityVotes = avgData.total;
+
+        // Datos básicos
+        const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=No+poster';
         const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'Desconocido';
         const genres = movie.genres ? movie.genres.map(g => g.name).join(', ') : 'No especificado';
         const runtime = movie.runtime ? `${movie.runtime} min` : 'N/A';
         const tmdbRating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
         const trailer = videos.find(v => v.type === 'Trailer') || videos.find(v => v.type === 'Teaser');
-        const trailerKey = trailer ? trailer.key : null;
+        const trailerLink = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
 
-        // Construir HTML principal
+        // HTML principal
         let html = `
             <div class="detail-wrapper">
                 <div class="detail-poster">
@@ -190,7 +193,11 @@ async function loadMovieDetail() {
                     </div>
                     <div class="rating-tmdb">
                         <span class="stars">⭐ ${tmdbRating}</span>
-                        <span class="votes">(${movie.vote_count} votos)</span>
+                        <span class="votes">(${movie.vote_count} votos TMDB)</span>
+                    </div>
+                    <div class="rating-community">
+                        <span class="stars">⭐ ${communityAvg > 0 ? communityAvg.toFixed(1) : 'N/A'}</span>
+                        <span class="votes">(${totalCommunityVotes} votos comunidad)</span>
                     </div>
                     <div class="action-buttons">
                         <button class="list-btn fav">❤️ Favoritas</button>
@@ -202,20 +209,18 @@ async function loadMovieDetail() {
                         <p>${movie.overview || 'No disponible'}</p>
                     </div>
                     <div class="trailer-link">
-                        ${trailerKey ? `<button class="trailer-btn" data-key="${trailerKey}">▶ Ver tráiler</button>` : ''}
+                        ${trailerLink ? `<button class="trailer-btn" data-trailer="${trailerLink}">▶ Ver tráiler</button>` : ''}
                         <button class="back-btn" onclick="window.location.href='/catalog.html'">← Volver al catálogo</button>
                     </div>
                 </div>
             </div>
         `;
 
-        // Sección de reparto
+        // Reparto principal
         if (credits.length > 0) {
             html += `<div class="cast-section"><h3>Reparto principal</h3><div class="cast-list">`;
             credits.forEach(actor => {
-                const actorPhoto = actor.profile_path
-                    ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                    : 'https://via.placeholder.com/185x278?text=No+photo';
+                const actorPhoto = actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : 'https://via.placeholder.com/185x278?text=No+photo';
                 html += `
                     <div class="cast-card">
                         <img src="${actorPhoto}" alt="${actor.name}">
@@ -229,13 +234,49 @@ async function loadMovieDetail() {
             html += `<div class="cast-section"><p>No hay información de reparto disponible.</p></div>`;
         }
 
-        // Sección de reseñas
-        if (reviews.length > 0) {
-            html += `<div class="reviews-section"><h3>Reseñas de la comunidad</h3>`;
-            reviews.forEach(review => {
-                const rating = review.author_details?.rating ? `⭐ ${review.author_details.rating}/10` : '';
+        // Formulario para escribir reseña
+        html += `
+            <div class="write-review-section">
+                <h3>Escribe tu reseña</h3>
+                <div class="rating-input">
+                    <label>Tu calificación (1 a 10):</label>
+                    <div class="star-rating">
+                        ${Array.from({ length: 10 }, (_, i) => `<span class="star" data-value="${i+1}">★</span>`).join('')}
+                    </div>
+                    <input type="hidden" id="ratingValue" value="0">
+                </div>
+                <textarea id="reviewContent" rows="4" placeholder="¿Qué te pareció la película?" maxlength="2000"></textarea>
+                <button id="submitReviewBtn" class="submit-review-btn">Publicar reseña</button>
+            </div>
+        `;
+
+        // Reseñas de la comunidad (locales)
+        html += `<div class="reviews-section"><h3>Reseñas de la comunidad de Viperdbox</h3>`;
+        if (localReviews.length > 0) {
+            localReviews.forEach(review => {
                 html += `
                     <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-author">${review.user_name}</span>
+                            <span class="review-rating">⭐ ${review.rating}/10</span>
+                            <span class="review-date">${new Date(review.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p class="review-content">${review.content}</p>
+                    </div>
+                `;
+            });
+        } else {
+            html += `<p>No hay reseñas de la comunidad aún. ¡Sé el primero en escribir una!</p>`;
+        }
+        html += `</div>`;
+
+        // Reseñas de TMDB (opcional)
+        if (tmdbReviews.length > 0) {
+            html += `<div class="reviews-section"><h3>Reseñas de TMDB</h3>`;
+            tmdbReviews.forEach(review => {
+                const rating = review.author_details?.rating ? `⭐ ${review.author_details.rating}/10` : '';
+                html += `
+                    <div class="review-card tmdb-review">
                         <div class="review-header">
                             <span class="review-author">${review.author}</span>
                             <span class="review-rating">${rating}</span>
@@ -246,57 +287,192 @@ async function loadMovieDetail() {
                 `;
             });
             html += `</div>`;
-        } else {
-            html += `<div class="reviews-section"><p>No hay reseñas de la comunidad para mostrar.</p></div>`;
         }
 
         container.innerHTML = html;
 
-        // Agregar modal para tráiler
-        if (trailerKey) {
-            // Crear el modal dinámicamente
-            const modal = document.createElement('div');
-            modal.id = 'trailerModal';
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <span class="close-modal">&times;</span>
-                    <iframe id="trailerIframe" width="100%" height="400" src="https://www.youtube.com/embed/${trailerKey}?autoplay=0" frameborder="0" allowfullscreen></iframe>
-                </div>
-            `;
-            document.body.appendChild(modal);
+        // ========== INTERACTIVIDAD ==========
+        const movieTitle = movie.title;
 
-            // Mostrar modal al hacer clic en el botón
-            const trailerBtn = document.querySelector('.trailer-btn');
-            const modalElement = document.getElementById('trailerModal');
-            const closeBtn = modalElement.querySelector('.close-modal');
-            const iframe = document.getElementById('trailerIframe');
+        // 1. Selector de estrellas (calificación 1-10)
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('ratingValue');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = parseInt(star.dataset.value);
+                ratingInput.value = value;
+                stars.forEach(s => {
+                    if (parseInt(s.dataset.value) <= value) s.classList.add('active');
+                    else s.classList.remove('active');
+                });
+            });
+        });
 
-            trailerBtn.onclick = () => {
-                modalElement.style.display = 'flex';
-                iframe.src = `https://www.youtube.com/embed/${trailerKey}?autoplay=1`;
-            };
-            closeBtn.onclick = () => {
-                modalElement.style.display = 'none';
-                iframe.src = `https://www.youtube.com/embed/${trailerKey}?autoplay=0`;
-            };
-            window.onclick = (event) => {
-                if (event.target === modalElement) {
-                    modalElement.style.display = 'none';
-                    iframe.src = `https://www.youtube.com/embed/${trailerKey}?autoplay=0`;
+        // 2. Publicar reseña
+        const submitBtn = document.getElementById('submitReviewBtn');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', async () => {
+                const rating = parseInt(ratingInput.value);
+                const content = document.getElementById('reviewContent').value.trim();
+                if (!rating || rating < 1 || rating > 10) {
+                    alert('Por favor selecciona una calificación de 1 a 10 estrellas.');
+                    return;
                 }
-            };
+                if (!content) {
+                    alert('Por favor escribe tu reseña.');
+                    return;
+                }
+                try {
+                    const res = await fetch(`${API_BASE}/movies/${movieId}/reviews`, {
+                        method: 'POST',
+                        headers: getHeaders(),
+                        body: JSON.stringify({ rating, content })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                        alert('¡Reseña publicada!');
+                        window.location.reload();
+                    } else {
+                        alert(data.error || 'Error al publicar reseña');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Error de red');
+                }
+            });
         }
+
+        // 3. Botones de listas (Favoritas, Pendientes, Vistas)
+        const favBtn = document.querySelector('.list-btn.fav');
+        const pendingBtn = document.querySelector('.list-btn.pending');
+        const watchedBtn = document.querySelector('.list-btn.watched');
+
+        async function updateListStatus(listName, btn) {
+            try {
+                const res = await fetch(`${API_BASE}/profile/lists/${listName}/${movieId}/check`, { headers: getHeaders() });
+                const data = await res.json();
+                if (data.inList) btn.classList.add('active');
+                else btn.classList.remove('active');
+            } catch (err) {}
+        }
+
+        async function handleListClick(listName, btn) {
+            const isActive = btn.classList.contains('active');
+            const url = `${API_BASE}/profile/lists/${listName}`;
+            if (isActive) {
+                const deleteUrl = `${url}/${movieId}`;
+                const res = await fetch(deleteUrl, { method: 'DELETE', headers: getHeaders() });
+                if (res.ok) {
+                    btn.classList.remove('active');
+                    alert(`Película eliminada de ${listName}`);
+                } else {
+                    alert('Error al eliminar');
+                }
+            } else {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ movieId, movieTitle })
+                });
+                if (res.ok) {
+                    btn.classList.add('active');
+                    alert(`Película agregada a ${listName}`);
+                } else {
+                    alert('Error al agregar');
+                }
+            }
+        }
+
+        if (favBtn) {
+            await updateListStatus('favoritas', favBtn);
+            favBtn.addEventListener('click', () => handleListClick('favoritas', favBtn));
+        }
+        if (pendingBtn) {
+            await updateListStatus('pendientes', pendingBtn);
+            pendingBtn.addEventListener('click', () => handleListClick('pendientes', pendingBtn));
+        }
+        if (watchedBtn) {
+            await updateListStatus('vistas', watchedBtn);
+            watchedBtn.addEventListener('click', () => handleListClick('vistas', watchedBtn));
+        }
+
+        // 4. Modal de tráiler
+        const trailerBtn = document.querySelector('.trailer-btn');
+        if (trailerBtn && trailerBtn.dataset.trailer) {
+            trailerBtn.addEventListener('click', () => {
+                const trailerUrl = trailerBtn.dataset.trailer.replace('watch?v=', 'embed/');
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <iframe src="${trailerUrl}" allowfullscreen></iframe>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                modal.style.display = 'flex';
+                modal.querySelector('.close-modal').onclick = () => modal.remove();
+                window.onclick = (e) => { if (e.target === modal) modal.remove(); };
+            });
+        }
+
     } catch (err) {
         console.error('Error en loadMovieDetail:', err);
-        container.innerHTML = `
-            <div class="error-container">
-                <p>Error de conexión. Intenta de nuevo más tarde.</p>
-                <button class="back-btn" onclick="window.location.href='/catalog.html'">← Volver al catálogo</button>
-            </div>
-        `;
+        container.innerHTML = '<div class="error-container"><p>Error de conexión. Intenta de nuevo más tarde.</p><button class="back-btn" onclick="window.location.href=\'/catalog.html\'">← Volver al catálogo</button></div>';
     }
 }
+// Cargar estado actual de las listas para esta película
+const listTypes = ['favoritas', 'pendientes', 'vistas'];
+const listButtons = {
+    favoritas: document.querySelector('.list-btn.fav'),
+    pendientes: document.querySelector('.list-btn.pending'),
+    vistas: document.querySelector('.list-btn.watched')
+};
+
+// Función para actualizar la apariencia del botón según si está en lista
+async function updateButtonState(listName, button) {
+    try {
+        const res = await fetch(`${API_BASE}/profile/lists/${listName}/${movieId}/check`, { headers: getHeaders() });
+        const data = await res.json();
+        if (data.inList) {
+            button.classList.add('active');
+            button.textContent = button.textContent.replace('❤️', '❤️'); // o cambiar texto
+        } else {
+            button.classList.remove('active');
+        }
+    } catch (err) {}
+}
+
+// Inicializar estado de cada botón
+for (const listName of listTypes) {
+    const btn = listButtons[listName];
+    if (btn) updateButtonState(listName, btn);
+}
+
+// Agregar event listeners para agregar/remover
+if (listButtons.favoritas) {
+    listButtons.favoritas.addEventListener('click', async () => {
+        const isActive = listButtons.favoritas.classList.contains('active');
+        const url = `${API_BASE}/profile/lists/favoritas`;
+        const method = isActive ? 'DELETE' : 'POST';
+        const body = isActive ? undefined : JSON.stringify({ movieId, movieTitle: movie.title });
+        try {
+            const res = await fetch(isActive ? `${url}/${movieId}` : url, {
+                method,
+                headers: getHeaders(),
+                body
+            });
+            if (res.ok) {
+                // Recargar el estado del botón
+                updateButtonState('favoritas', listButtons.favoritas);
+                // Opcional: refrescar página para actualizar el perfil (no necesario)
+            } else {
+                alert('Error al actualizar lista');
+            }
+        } catch (err) { console.error(err); }
+    });
+}
+// Repetir para pendientes y vistas (cambiar listName y botón)
 
 // ==================== PERFIL ====================
 async function loadMyProfile() {
@@ -305,43 +481,78 @@ async function loadMyProfile() {
         window.location.href = '/login.html';
         return;
     }
+
     try {
         const res = await fetch(`${API_BASE}/profile/me`, { headers: getHeaders() });
         const data = await res.json();
-        if (data.user) {
-            document.getElementById('profileName').textContent = data.user.name;
-            document.getElementById('profileEmail').textContent = data.user.email;
-            document.getElementById('profileSince').textContent = new Date(data.user.created_at).toLocaleDateString();
-        } else {
-            document.getElementById('profileInfo').innerHTML = '<p>Error al cargar perfil</p>';
+
+        if (!res.ok || !data.user) {
+            document.getElementById('profileInfo').innerHTML = `<p>Error: ${data.error || 'No se pudo cargar el perfil'}</p>`;
             return;
         }
-        // Reseñas (si las hubiera, pero no son necesarias)
+
+        // Datos del usuario
+        document.getElementById('profileName').textContent = data.user.name;
+        document.getElementById('profileEmail').textContent = data.user.email;
+        document.getElementById('profileSince').textContent = new Date(data.user.created_at).toLocaleDateString();
+
+        // Reseñas del usuario
         const reviewsDiv = document.getElementById('myReviews');
         if (data.reviews && data.reviews.length > 0) {
             reviewsDiv.innerHTML = data.reviews.map(r => `
-                <div class="review-item"><strong>${r.movie_title}</strong> - ⭐ ${r.rating}/10<br>${r.content}<br><small>${new Date(r.created_at).toLocaleDateString()}</small></div>
+                <div class="review-item">
+                    <strong>${r.movie_title}</strong> - ⭐ ${r.rating}/10<br>
+                    ${r.content}<br>
+                    <small>${new Date(r.created_at).toLocaleDateString()}</small>
+                </div>
             `).join('');
         } else {
             reviewsDiv.innerHTML = '<p>No has escrito ninguna reseña aún.</p>';
         }
-        // Listas
-        let fav=0, pend=0, view=0;
-        if (Array.isArray(data.lists)) {
-            fav = data.lists.find(l => l.name === 'favoritas')?.movies?.length || 0;
-            pend = data.lists.find(l => l.name === 'pendientes')?.movies?.length || 0;
-            view = data.lists.find(l => l.name === 'vistas')?.movies?.length || 0;
-        } else if (data.lists && typeof data.lists === 'object') {
-            fav = data.lists.favoritas?.movies?.length || 0;
-            pend = data.lists.pendientes?.movies?.length || 0;
-            view = data.lists.vistas?.movies?.length || 0;
+
+        // Listas del usuario (con enlaces)
+        const listsContainer = document.getElementById('listsContainer');
+        if (listsContainer) {
+            const lists = data.lists || [];
+            if (lists.length === 0) {
+                listsContainer.innerHTML = '<p>No tienes listas aún. Agrega películas desde su página de detalle.</p>';
+            } else {
+                listsContainer.innerHTML = '';
+                let favCount = 0, pendCount = 0, viewCount = 0;
+                for (const list of lists) {
+                    const listName = list.name;
+                    const movies = list.movies || [];
+                    if (listName === 'favoritas') favCount = movies.length;
+                    else if (listName === 'pendientes') pendCount = movies.length;
+                    else if (listName === 'vistas') viewCount = movies.length;
+
+                    const listDiv = document.createElement('div');
+                    listDiv.className = 'list-section';
+                    const displayName = listName.charAt(0).toUpperCase() + listName.slice(1);
+                    listDiv.innerHTML = `<h3>${displayName}</h3><div class="list-movies"></div>`;
+                    const moviesDiv = listDiv.querySelector('.list-movies');
+                    if (movies.length === 0) {
+                        moviesDiv.innerHTML = '<p>No hay películas en esta lista.</p>';
+                    } else {
+                        movies.forEach(movie => {
+                            const link = document.createElement('a');
+                            link.href = `/movieDetail.html?id=${movie.id}`;
+                            link.textContent = movie.title;
+                            link.className = 'list-movie-link';
+                            moviesDiv.appendChild(link);
+                            moviesDiv.appendChild(document.createElement('br'));
+                        });
+                    }
+                    listsContainer.appendChild(listDiv);
+                }
+                document.getElementById('favCount').textContent = favCount;
+                document.getElementById('pendCount').textContent = pendCount;
+                document.getElementById('viewCount').textContent = viewCount;
+            }
         }
-        document.getElementById('favCount').textContent = fav;
-        document.getElementById('pendCount').textContent = pend;
-        document.getElementById('viewCount').textContent = view;
     } catch (err) {
-        console.error(err);
-        document.getElementById('profileInfo').innerHTML = '<p>Error al cargar perfil</p>';
+        console.error('Error en loadMyProfile:', err);
+        document.getElementById('profileInfo').innerHTML = '<p>Error al cargar perfil. Revisa tu conexión.</p>';
     }
 }
 

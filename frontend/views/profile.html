@@ -1,38 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mi Perfil - Viperdbox</title>
-  <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Viperdbox</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <div class="navbar">
-    <div class="logo">VIPERDBOX</div>
-    <div class="nav-links">
-      <a href="/dashboard.html">Dashboard</a>
-      <a href="/catalog.html">Películas</a>
-      <a href="/profile.html">Mi Perfil</a>
-      <a id="logoutBtn">Cerrar sesión</a>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="profile-card" id="profileInfo">
-      <h2 id="profileName">Cargando...</h2>
-      <p id="profileEmail"></p>
-      <p>Miembro desde: <span id="profileSince"></span></p>
+    <div class="navbar">
+        <div class="logo">
+            <a href="/catalog.html">VIPERDBOX</a>
+        </div>
+        <div class="nav-links">
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/catalog.html">Películas</a>
+            <a href="/profile.html">Mi Perfil</a>
+            <a id="logoutBtn" style="cursor: pointer;">Cerrar sesión</a>
+        </div>
     </div>
 
+    <div class="container">
+        <!-- Datos del usuario -->
+        <div class="profile-card" id="profileInfo">
+            <h2 id="profileName">Cargando...</h2>
+            <p id="profileEmail"></p>
+            <p>Miembro desde: <span id="profileSince"></span></p>
+        </div>
 
-    <h2>Mis listas</h2>
-    <div class="stats" id="listsStats">
-      <div class="stat-box">Favoritas: <span id="favCount">0</span></div>
-      <div class="stat-box">Pendientes: <span id="pendCount">0</span></div>
-      <div class="stat-box">Vistas: <span id="viewCount">0</span></div>
+        <!-- Contadores de listas -->
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="favCount">0</div>
+                <div class="stat-label">Favoritas</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="pendCount">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="viewCount">0</div>
+                <div class="stat-label">Vistas</div>
+            </div>
+        </div>
+
+        <!-- Sección de reseñas -->
+        <h2>Mis reseñas</h2>
+        <div id="myReviews" class="review-list">
+            <p>Cargando reseñas...</p>
+        </div>
+
+        <!-- Sección de listas (se llenará con JS) -->
+        <h2>Mis listas</h2>
+        <div id="listsContainer" class="lists-container">
+            <p>Cargando listas...</p>
+        </div>
     </div>
-  </div>
 
-<script src="/js/main.js"></script>
-<script>loadMyProfile();</script>
+    <script src="/js/main.js"></script>
+    <script>
+        // Cargar el perfil al entrar
+        loadMyProfile();
+    </script>
 </body>
 </html>

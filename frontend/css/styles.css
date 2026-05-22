@@ -543,3 +543,349 @@ h1 {
         height: 250px;
     }
 }
+/* Sección de reseñas de usuarios */
+.community-rating {
+    background-color: #1a1a1a;
+    border-radius: 16px;
+    padding: 1rem;
+    margin: 2rem 0;
+    text-align: center;
+}
+.new-review {
+    background-color: #0f0f0f;
+    border: 1px solid #222;
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+.new-review textarea {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 0.8rem;
+    color: white;
+    margin: 1rem 0;
+    font-family: inherit;
+}
+.rating-input {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.rating-input select {
+    background-color: #1a1a1a;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 30px;
+    padding: 0.4rem 1rem;
+}
+.submit-review-btn {
+    background-color: #E94560;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    color: white;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+.submit-review-btn:hover {
+    background-color: #c73e56;
+}
+.user-reviews {
+    margin-top: 2rem;
+}
+.user-reviews h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #E94560;
+    padding-left: 1rem;
+}
+.review-date {
+    font-size: 0.7rem;
+    color: #777;
+}
+/* ===== SELECTOR DE ESTRELLAS (1 a 10) ===== */
+.write-review-section {
+    background-color: #0f0f0f;
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border: 1px solid #222;
+}
+
+.write-review-section h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    border-left: 4px solid #E94560;
+    padding-left: 1rem;
+}
+
+.rating-input {
+    margin-bottom: 1rem;
+}
+
+.star-rating {
+    display: flex;
+    gap: 0.3rem;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+}
+
+.star {
+    font-size: 2rem;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.star.active {
+    color: #E94560;
+    text-shadow: 0 0 5px #E94560;
+}
+
+.star:hover {
+    transform: scale(1.1);
+    color: #E94560;
+}
+
+#reviewContent {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 0.8rem;
+    color: white;
+    font-family: inherit;
+    resize: vertical;
+    margin-top: 0.5rem;
+}
+
+.submit-review-btn {
+    background-color: #E94560;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 40px;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.submit-review-btn:hover {
+    background-color: #c73e56;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(233, 69, 96, 0.3);
+}
+
+/* Tarjetas de reseñas (mejoradas) */
+.review-card {
+    background-color: #0f0f0f;
+    border: 1px solid #222;
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s;
+}
+
+.review-card:hover {
+    transform: translateX(5px);
+    border-color: #E94560;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.review-author {
+    font-weight: bold;
+    color: #E94560;
+    font-size: 1rem;
+}
+
+.review-rating {
+    background-color: #E94560;
+    padding: 0.2rem 0.6rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.review-date {
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+.review-content {
+    color: #ccc;
+    margin: 0.5rem 0;
+    line-height: 1.4;
+}
+
+/* Mensaje cuando no hay reseñas */
+.reviews-section p {
+    color: #aaa;
+    text-align: center;
+    padding: 1rem;
+    background-color: #0f0f0f;
+    border-radius: 16px;
+}
+/* ========== PERFIL - MEJORAS VISUALES ========== */
+
+/* Tarjeta de perfil */
+.profile-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+}
+
+.profile-card h2 {
+    font-size: 1.8rem;
+    color: #E94560;
+    margin-bottom: 0.5rem;
+}
+
+.profile-card p {
+    color: #ccc;
+    margin: 0.3rem 0;
+}
+
+/* Estadísticas (contadores) */
+.stats {
+    display: flex;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    background: #1a1a1a;
+    border-radius: 20px;
+    padding: 1.2rem;
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+    border: 1px solid #2a2a2a;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #E94560;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 0.3rem;
+}
+
+/* Reseñas */
+.review-list {
+    background-color: #0f0f0f;
+    border-radius: 20px;
+    border: 1px solid #2a2a2a;
+    overflow: hidden;
+    margin: 1.5rem 0;
+}
+
+.review-item {
+    padding: 1.2rem;
+    border-bottom: 1px solid #222;
+    transition: background 0.2s;
+}
+.review-item:last-child {
+    border-bottom: none;
+}
+.review-item:hover {
+    background-color: #1a1a1a;
+}
+
+.review-item strong {
+    color: #E94560;
+    font-size: 1.1rem;
+}
+
+.review-item small {
+    color: #777;
+    display: block;
+    margin-top: 0.5rem;
+}
+
+/* Contenedor de listas */
+.lists-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.list-section {
+    background: #0f0f0f;
+    border-radius: 20px;
+    padding: 1.2rem;
+    flex: 1;
+    min-width: 220px;
+    border: 1px solid #2a2a2a;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.list-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.list-section h3 {
+    color: #E94560;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid #E94560;
+    padding-left: 0.8rem;
+}
+
+/* Películas dentro de las listas (enlaces) */
+.list-movies {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.list-movie-link {
+    background-color: #1a1a1a;
+    padding: 0.5rem 0.8rem;
+    border-radius: 30px;
+    text-decoration: none;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: inline-block;
+    text-align: center;
+    border: 1px solid #2a2a2a;
+}
+.list-movie-link:hover {
+    background-color: #E94560;
+    color: white;
+    transform: translateX(5px);
+    border-color: #E94560;
+}
+
+/* Mensaje cuando no hay películas */
+.list-movies p {
+    color: #777;
+    font-style: italic;
+    padding: 0.5rem 0;
+}
