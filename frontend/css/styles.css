@@ -898,3 +898,17 @@ h1 {
     color: #E94560;
     text-decoration: underline;
 }
+.like-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+.like-btn.liked {
+    color: #E94560;
+}
+.like-btn:hover {
+    color: #E94560;
+}

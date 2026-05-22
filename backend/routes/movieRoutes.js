@@ -13,5 +13,6 @@ router.get('/:id', auth, movieController.getMovieDetails);
 router.post('/:id/reviews', auth, movieController.addReview);
 router.get('/:id/reviews', auth, movieController.getMovieReviewsWithUser);
 router.get('/:id/average', auth, movieController.getAverageRating);
-
+router.post('/reviews/:id/like', auth, movieController.toggleLike);
+router.get('/reviews/:id/like', auth, movieController.getLikeCount);
 module.exports = router;

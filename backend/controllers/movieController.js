@@ -101,3 +101,28 @@ exports.getAverageRating = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener promedio' });
     }
 };
+const Like = require('../models/Like');
+
+exports.toggleLike = async (req, res) => {
+    const userId = req.user.id;
+    const reviewId = req.params.id;
+    try {
+        const result = await Like.toggle(reviewId, userId);
+        const newCount = await Like.countByReview(reviewId);
+        res.json({ liked: result.liked, count: newCount });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al procesar like' });
+    }
+};
+
+exports.getLikeCount = async (req, res) => {
+    const reviewId = req.params.id;
+    try {
+        const count = await Like.countByReview(reviewId);
+        const liked = req.user ? await Like.userLiked(reviewId, req.user.id) : false;
+        res.json({ count, liked });
+    } catch (error) {
+        res.status(500).json({ error: 'Error' });
+    }
+};

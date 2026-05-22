@@ -206,7 +206,7 @@ async function loadMovieDetail() {
         const trailer = videos.find(v => v.type === 'Trailer') || videos.find(v => v.type === 'Teaser');
         const trailerLink = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
 
-        // HTML principal
+        // HTML principal (sin emojis en botones de listas)
         let html = `
             <div class="detail-wrapper">
                 <div class="detail-poster">
@@ -228,9 +228,9 @@ async function loadMovieDetail() {
                         <span class="votes">(${totalCommunityVotes} votos comunidad)</span>
                     </div>
                     <div class="action-buttons">
-                        <button class="list-btn fav"> Favoritas</button>
-                        <button class="list-btn pending"> Pendientes</button>
-                        <button class="list-btn watched"> Vistas</button>
+                        <button class="list-btn fav">Favoritas</button>
+                        <button class="list-btn pending">Pendientes</button>
+                        <button class="list-btn watched">Vistas</button>
                     </div>
                     <div class="synopsis">
                         <h3>Sinopsis</h3>
@@ -283,13 +283,16 @@ async function loadMovieDetail() {
         if (localReviews.length > 0) {
             localReviews.forEach(review => {
                 html += `
-                    <div class="review-card">
+                    <div class="review-card" data-review-id="${review.id}">
                         <div class="review-header">
                             <span class="review-author" data-user-id="${review.user_id}" style="cursor: pointer;">${review.user_name}</span>
                             <span class="review-rating">⭐ ${review.rating}/10</span>
                             <span class="review-date">${new Date(review.created_at).toLocaleDateString()}</span>
                         </div>
                         <p class="review-content">${review.content}</p>
+                        <div class="like-section">
+                            <button class="like-btn" data-review-id="${review.id}">❤️ <span class="like-count">${review.like_count || 0}</span></button>
+                        </div>
                     </div>
                 `;
             });
@@ -370,7 +373,7 @@ async function loadMovieDetail() {
             });
         }
 
-        // 3. Botones de listas (Favoritas, Pendientes, Vistas)
+        // 3. Botones de listas (sin emojis)
         const favBtn = document.querySelector('.list-btn.fav');
         const pendingBtn = document.querySelector('.list-btn.pending');
         const watchedBtn = document.querySelector('.list-btn.watched');
@@ -424,7 +427,32 @@ async function loadMovieDetail() {
             watchedBtn.addEventListener('click', () => handleListClick('vistas', watchedBtn));
         }
 
-        // 4. Modal de tráiler
+        // 4. Likes en reseñas
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            const reviewId = btn.dataset.reviewId;
+            fetch(`${API_BASE}/movies/reviews/${reviewId}/like`, { headers: getHeaders() })
+                .then(res => res.json())
+                .then(data => {
+                    const countSpan = btn.querySelector('.like-count');
+                    if (countSpan) countSpan.textContent = data.count;
+                    if (data.liked) btn.classList.add('liked');
+                })
+                .catch(console.error);
+            btn.addEventListener('click', async () => {
+                try {
+                    const res = await fetch(`${API_BASE}/movies/reviews/${reviewId}/like`, { method: 'POST', headers: getHeaders() });
+                    const data = await res.json();
+                    const countSpan = btn.querySelector('.like-count');
+                    if (countSpan) countSpan.textContent = data.count;
+                    if (data.liked) btn.classList.add('liked');
+                    else btn.classList.remove('liked');
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+        });
+
+        // 5. Modal de tráiler
         const trailerBtn = document.querySelector('.trailer-btn');
         if (trailerBtn && trailerBtn.dataset.trailer) {
             trailerBtn.addEventListener('click', () => {
@@ -444,13 +472,11 @@ async function loadMovieDetail() {
             });
         }
 
-        // 5. Click en nombre del autor de la reseña (para ir a su perfil)
+        // 6. Click en nombre del autor (ir a perfil)
         container.addEventListener('click', (e) => {
             const authorSpan = e.target.closest('.review-author');
             if (authorSpan && authorSpan.dataset.userId) {
                 const userId = authorSpan.dataset.userId;
-                // No permitir ir a tu propio perfil desde una reseña tuya (opcional)
-                // Si quieres evitar, puedes comparar con el ID del usuario actual (necesitas obtenerlo del token)
                 window.location.href = `/otherProfile.html?id=${userId}`;
             }
         });
@@ -459,57 +485,6 @@ async function loadMovieDetail() {
         console.error('Error en loadMovieDetail:', err);
         container.innerHTML = '<div class="error-container"><p>Error de conexión. Intenta de nuevo más tarde.</p><button class="back-btn" onclick="window.location.href=\'/catalog.html\'">← Volver al catálogo</button></div>';
     }
-}
-// Cargar estado actual de las listas para esta película
-const listTypes = ['favoritas', 'pendientes', 'vistas'];
-const listButtons = {
-    favoritas: document.querySelector('.list-btn.fav'),
-    pendientes: document.querySelector('.list-btn.pending'),
-    vistas: document.querySelector('.list-btn.watched')
-};
-
-// Función para actualizar la apariencia del botón según si está en lista
-async function updateButtonState(listName, button) {
-    try {
-        const res = await fetch(`${API_BASE}/profile/lists/${listName}/${movieId}/check`, { headers: getHeaders() });
-        const data = await res.json();
-        if (data.inList) {
-            button.classList.add('active');
-            button.textContent = button.textContent.replace('❤️', '❤️'); // o cambiar texto
-        } else {
-            button.classList.remove('active');
-        }
-    } catch (err) {}
-}
-
-// Inicializar estado de cada botón
-for (const listName of listTypes) {
-    const btn = listButtons[listName];
-    if (btn) updateButtonState(listName, btn);
-}
-
-// Agregar event listeners para agregar/remover
-if (listButtons.favoritas) {
-    listButtons.favoritas.addEventListener('click', async () => {
-        const isActive = listButtons.favoritas.classList.contains('active');
-        const url = `${API_BASE}/profile/lists/favoritas`;
-        const method = isActive ? 'DELETE' : 'POST';
-        const body = isActive ? undefined : JSON.stringify({ movieId, movieTitle: movie.title });
-        try {
-            const res = await fetch(isActive ? `${url}/${movieId}` : url, {
-                method,
-                headers: getHeaders(),
-                body
-            });
-            if (res.ok) {
-                // Recargar el estado del botón
-                updateButtonState('favoritas', listButtons.favoritas);
-                // Opcional: refrescar página para actualizar el perfil (no necesario)
-            } else {
-                alert('Error al actualizar lista');
-            }
-        } catch (err) { console.error(err); }
-    });
 }
 // Repetir para pendientes y vistas (cambiar listName y botón)
 
