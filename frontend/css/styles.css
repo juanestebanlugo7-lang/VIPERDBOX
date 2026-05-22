@@ -1,8 +1,3 @@
-/* ============================================
-   VIPERDBOX - ESTILOS PRINCIPALES
-   Diseño oscuro, acentos rojos (#E94560)
-   ============================================ */
-
 /* ---------- RESET Y GLOBALES ---------- */
 * {
     margin: 0;
@@ -174,7 +169,7 @@ h1 {
     opacity: 0.8;
 }
 
-/* ---------- VISTA DETALLE (MEJORADA) ---------- */
+/* ---------- VISTA DETALLE  ---------- */
 .detail-wrapper {
     display: flex;
     gap: 2rem;
@@ -369,7 +364,7 @@ h1 {
     color: #aaa;
 }
 
-/* ---------- RESEÑAS DE LA COMUNIDAD (TMDB) ---------- */
+/* ---------- RESEÑAS DE LA COMUNIDAD  ---------- */
 .reviews-section {
     margin-top: 2rem;
 }
@@ -423,7 +418,7 @@ h1 {
     text-decoration: underline;
 }
 
-/* ---------- MODAL DE TRÁILER (YOUTUBE EMBED) ---------- */
+/* ---------- MODAL DE TRÁILER  ---------- */
 .modal {
     display: none;
     position: fixed;
@@ -519,7 +514,7 @@ h1 {
     text-decoration: none;
 }
 
-/* ---------- RESPONSIVE (MÓVILES Y TABLETS) ---------- */
+/*  RESPONSIVE  */
 @media (max-width: 768px) {
     .detail-wrapper {
         flex-direction: column;
@@ -606,7 +601,7 @@ h1 {
     font-size: 0.7rem;
     color: #777;
 }
-/* ===== SELECTOR DE ESTRELLAS (1 a 10) ===== */
+/*  SELECTOR DE ESTRELLAS (1 a 10)  */
 .write-review-section {
     background-color: #0f0f0f;
     border-radius: 20px;
@@ -680,7 +675,7 @@ h1 {
     box-shadow: 0 4px 10px rgba(233, 69, 96, 0.3);
 }
 
-/* Tarjetas de reseñas (mejoradas) */
+/* Tarjetas de reseñas  */
 .review-card {
     background-color: #0f0f0f;
     border: 1px solid #222;
@@ -736,8 +731,6 @@ h1 {
     background-color: #0f0f0f;
     border-radius: 16px;
 }
-/* ========== PERFIL - MEJORAS VISUALES ========== */
-
 /* Tarjeta de perfil */
 .profile-card {
     background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
@@ -912,7 +905,7 @@ h1 {
 .like-btn:hover {
     color: #E94560;
 }
-/* ========== DASHBOARD ========== */
+/*  DASHBOARD  */
 .dashboard-stats {
     display: flex;
     gap: 2rem;

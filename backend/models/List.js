@@ -21,10 +21,10 @@ class List {
                         json_build_object('id', lm.movie_id, 'title', lm.movie_title)
                     ) FILTER (WHERE lm.movie_id IS NOT NULL), '[]'
                 ) as movies
-             FROM lists l
-             LEFT JOIN list_movies lm ON l.id = lm.list_id
-             WHERE l.user_id = $1
-             GROUP BY l.id`,
+            FROM lists l
+            LEFT JOIN list_movies lm ON l.id = lm.list_id
+            WHERE l.user_id = $1
+            GROUP BY l.id`,
             [userId]
         );
         return result.rows;
@@ -40,8 +40,8 @@ class List {
         const listId = listResult.rows[0].id;
         await db.query(
             `INSERT INTO list_movies (list_id, movie_id, movie_title)
-             VALUES ($1, $2, $3)
-             ON CONFLICT (list_id, movie_id) DO NOTHING`,
+            VALUES ($1, $2, $3)
+            ON CONFLICT (list_id, movie_id) DO NOTHING`,
             [listId, movieId, movieTitle]
         );
         return true;
@@ -66,8 +66,8 @@ class List {
     static async isMovieInList(userId, listName, movieId) {
         const result = await db.query(
             `SELECT 1 FROM list_movies lm
-             JOIN lists l ON lm.list_id = l.id
-             WHERE l.user_id = $1 AND l.name = $2 AND lm.movie_id = $3`,
+            JOIN lists l ON lm.list_id = l.id
+            WHERE l.user_id = $1 AND l.name = $2 AND lm.movie_id = $3`,
             [userId, listName, movieId]
         );
         return result.rows.length > 0;

@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ===== CONFIGURACIÓN DE RUTAS ESTÁTICAS =====
+//  CONFIGURACIÓN DE RUTAS ESTÁTICAS 
 const viewsPath = path.join(__dirname, '..', 'frontend', 'views');
 const cssPath = path.join(__dirname, '..', 'frontend', 'css');
 const jsPath = path.join(__dirname, '..', 'frontend', 'js');
@@ -21,13 +21,13 @@ app.use(express.static(viewsPath));        // Para HTML
 app.use('/css', express.static(cssPath));  // Para CSS (la URL /css/styles.css)
 app.use('/js', express.static(jsPath));    // Para JS (la URL /js/main.js)
 app.use('/api/admin', require('./routes/adminRoutes'));
-// ===== RUTAS DE LA API =====
+//  RUTAS DE LA API 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/movies', require('./routes/movieRoutes'));
 app.use('/api/profile', require('./routes/profileRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
-// ===== RUTA PRINCIPAL =====
+//  RUTA PRINCIPAL 
 app.get('/', (req, res) => {
   res.sendFile(path.join(viewsPath, 'index.html'));
 });

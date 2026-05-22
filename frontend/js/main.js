@@ -1,4 +1,4 @@
-// ==================== GLOBALES ====================
+//  GLOBALES 
 const API_BASE = 'http://localhost:3000/api';
 
 function getToken() {
@@ -17,7 +17,7 @@ function getHeaders() {
     };
 }
 
-// ==================== AUTENTICACIÓN ====================
+//  AUTENTICACIÓN 
 async function login(email, password) {
     try {
         const res = await fetch(`${API_BASE}/auth/login`, {
@@ -61,7 +61,7 @@ function logout() {
     window.location.href = '/login.html';
 }
 
-// ==================== CATÁLOGO ====================
+//  CATÁLOGO  
 async function loadPopularMovies(page = 1) {
     const grid = document.getElementById('moviesGrid');
     if (!grid) return;
@@ -120,8 +120,6 @@ function renderPagination(current, total, type) {
     const pagDiv = document.getElementById('pagination');
     if (!pagDiv) return;
     pagDiv.innerHTML = '';
-
-    // Si no hay páginas o solo una, no mostramos nada (opcional)
     if (total <= 1) return;
 
     // Botón "Anterior"
@@ -160,7 +158,7 @@ function renderPagination(current, total, type) {
     };
     pagDiv.appendChild(nextBtn);
 }
-// ==================== DASHBOARD ====================
+//  DASHBOARD 
 async function loadDashboard() {
     const token = getToken();
     if (!token) {
@@ -178,7 +176,7 @@ async function loadDashboard() {
         document.getElementById('totalReviews').textContent = data.totalReviews;
         document.getElementById('avgRating').textContent = data.avgRating.toFixed(1);
 
-        // Películas más comentadas (clickeables)
+        // Películas más comentadas 
         const topMoviesDiv = document.getElementById('topMovies');
         if (data.topMovies.length === 0) {
             topMoviesDiv.innerHTML = '<p>No hay reseñas aún.</p>';
@@ -197,7 +195,7 @@ async function loadDashboard() {
             });
         }
 
-        // Actividad reciente (clickeable: nombre del usuario y película)
+        // Actividad reciente 
         const activityDiv = document.getElementById('recentActivity');
         if (data.recentActivity.length === 0) {
             activityDiv.innerHTML = '<p>No hay actividad reciente.</p>';
@@ -224,7 +222,7 @@ async function loadDashboard() {
     }
 }
 
-// ==================== DETALLE COMPLETO ====================
+//  DETALLE COMPLETO 
 async function loadMovieDetail() {
     const params = new URLSearchParams(window.location.search);
     const movieId = params.get('id');
@@ -269,7 +267,7 @@ async function loadMovieDetail() {
         const trailer = videos.find(v => v.type === 'Trailer') || videos.find(v => v.type === 'Teaser');
         const trailerLink = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null;
 
-        // HTML principal (sin emojis en botones de listas)
+        // HTML principal 
         let html = `
             <div class="detail-wrapper">
                 <div class="detail-poster">
@@ -341,7 +339,7 @@ async function loadMovieDetail() {
             </div>
         `;
 
-        // Reseñas de la comunidad (locales) - con nombre clickeable
+        // Reseñas de la comunidad 
         html += `<div class="reviews-section"><h3>Reseñas de la comunidad de Viperdbox</h3>`;
         if (localReviews.length > 0) {
             localReviews.forEach(review => {
@@ -364,7 +362,7 @@ async function loadMovieDetail() {
         }
         html += `</div>`;
 
-        // Reseñas de TMDB (opcional)
+        // Reseñas de TMDB
         if (tmdbReviews.length > 0) {
             html += `<div class="reviews-section"><h3>Reseñas de TMDB</h3>`;
             tmdbReviews.forEach(review => {
@@ -385,10 +383,10 @@ async function loadMovieDetail() {
 
         container.innerHTML = html;
 
-        // ========== INTERACTIVIDAD ==========
+        //  INTERACTIVIDAD 
         const movieTitle = movie.title;
 
-        // 1. Selector de estrellas (calificación 1-10)
+        // Selector de estrellas (calificación 1-10)
         const stars = document.querySelectorAll('.star');
         const ratingInput = document.getElementById('ratingValue');
         stars.forEach(star => {
@@ -402,7 +400,7 @@ async function loadMovieDetail() {
             });
         });
 
-        // 2. Publicar reseña
+        //  Publicar reseña
         const submitBtn = document.getElementById('submitReviewBtn');
         if (submitBtn) {
             submitBtn.addEventListener('click', async () => {
@@ -436,7 +434,7 @@ async function loadMovieDetail() {
             });
         }
 
-        // 3. Botones de listas (sin emojis)
+        //  Botones de listas 
         const favBtn = document.querySelector('.list-btn.fav');
         const pendingBtn = document.querySelector('.list-btn.pending');
         const watchedBtn = document.querySelector('.list-btn.watched');
@@ -490,7 +488,7 @@ async function loadMovieDetail() {
             watchedBtn.addEventListener('click', () => handleListClick('vistas', watchedBtn));
         }
 
-        // 4. Likes en reseñas
+        // Likes en reseñas
         document.querySelectorAll('.like-btn').forEach(btn => {
             const reviewId = btn.dataset.reviewId;
             fetch(`${API_BASE}/movies/reviews/${reviewId}/like`, { headers: getHeaders() })
@@ -515,7 +513,7 @@ async function loadMovieDetail() {
             });
         });
 
-        // 5. Modal de tráiler
+        //  Modal de tráiler
         const trailerBtn = document.querySelector('.trailer-btn');
         if (trailerBtn && trailerBtn.dataset.trailer) {
             trailerBtn.addEventListener('click', () => {
@@ -535,7 +533,7 @@ async function loadMovieDetail() {
             });
         }
 
-        // 6. Click en nombre del autor (ir a perfil)
+        // Click en nombre del autor (ir a perfil)
         container.addEventListener('click', (e) => {
             const authorSpan = e.target.closest('.review-author');
             if (authorSpan && authorSpan.dataset.userId) {
@@ -549,9 +547,7 @@ async function loadMovieDetail() {
         container.innerHTML = '<div class="error-container"><p>Error de conexión. Intenta de nuevo más tarde.</p><button class="back-btn" onclick="window.location.href=\'/catalog.html\'">← Volver al catálogo</button></div>';
     }
 }
-// Repetir para pendientes y vistas (cambiar listName y botón)
-
-// ==================== PERFIL ====================
+//  PERFIL 
 async function loadMyProfile() {
     const token = getToken();
     if (!token) {
@@ -587,7 +583,7 @@ async function loadMyProfile() {
             reviewsDiv.innerHTML = '<p>No has escrito ninguna reseña aún.</p>';
         }
 
-        // Listas del usuario (con enlaces)
+        // Listas del usuario 
         const listsContainer = document.getElementById('listsContainer');
         if (listsContainer) {
             const lists = data.lists || [];
@@ -712,7 +708,7 @@ async function loadOtherProfile(userId) {
     }
 }
 
-// ==================== INICIALIZACIÓN ====================
+//  INICIALIZACIÓN 
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
     if (!path.includes('login.html') && !path.includes('register.html') && !getToken()) {
@@ -780,7 +776,7 @@ async function loadAdminDashboard() {
         document.getElementById('totalReviews').textContent = data.stats.totalReviews || 0;
         document.getElementById('totalMovies').textContent = data.stats.totalMovies || 0;
 
-        // Mostrar usuarios (solo información, sin botones de promoción)
+        // Mostrar usuarios 
         const usersDiv = document.getElementById('usersList');
         if (data.users.length === 0) {
             usersDiv.innerHTML = '<p>No hay usuarios registrados.</p>';
