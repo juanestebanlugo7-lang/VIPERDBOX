@@ -41,6 +41,17 @@ class Review {
             total: parseInt(result.rows[0].total)
         };
     }
+    static async getByMovieWithUser(movieId) {
+    const result = await db.query(
+        `SELECT r.*, u.name as user_name, u.id as user_id
+         FROM reviews r
+         JOIN users u ON r.user_id = u.id
+         WHERE r.movie_id = $1
+         ORDER BY r.created_at DESC`,
+        [movieId]
+    );
+    return result.rows;
+}
 }
 
 module.exports = Review;

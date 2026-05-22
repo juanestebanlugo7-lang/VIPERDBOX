@@ -889,3 +889,12 @@ h1 {
     font-style: italic;
     padding: 0.5rem 0;
 }
+.review-author {
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+.review-author:hover {
+    color: #E94560;
+    text-decoration: underline;
+}

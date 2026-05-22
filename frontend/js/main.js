@@ -120,17 +120,45 @@ function renderPagination(current, total, type) {
     const pagDiv = document.getElementById('pagination');
     if (!pagDiv) return;
     pagDiv.innerHTML = '';
-    const maxPages = Math.min(total, 10);
-    for (let i = 1; i <= maxPages; i++) {
+
+    // Si no hay páginas o solo una, no mostramos nada (opcional)
+    if (total <= 1) return;
+
+    // Botón "Anterior"
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '◀';
+    prevBtn.disabled = current === 1;
+    prevBtn.onclick = () => {
+        if (type === 'popular') loadPopularMovies(current - 1);
+        else if (type === 'search') searchMovies(current - 1);
+    };
+    pagDiv.appendChild(prevBtn);
+
+    // Calcular rango de páginas a mostrar (máximo 5 a cada lado, total máximo 10)
+    let startPage = Math.max(1, current - 4);
+    let endPage = Math.min(total, startPage + 9);
+    if (endPage - startPage < 9) startPage = Math.max(1, endPage - 9);
+
+    for (let i = startPage; i <= endPage; i++) {
         const btn = document.createElement('button');
         btn.textContent = i;
         btn.onclick = () => {
             if (type === 'popular') loadPopularMovies(i);
-            else searchMovies(i);
+            else if (type === 'search') searchMovies(i);
         };
         if (i === current) btn.disabled = true;
         pagDiv.appendChild(btn);
     }
+
+    // Botón "Siguiente"
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '▶';
+    nextBtn.disabled = current === total;
+    nextBtn.onclick = () => {
+        if (type === 'popular') loadPopularMovies(current + 1);
+        else if (type === 'search') searchMovies(current + 1);
+    };
+    pagDiv.appendChild(nextBtn);
 }
 
 // ==================== DETALLE COMPLETO ====================
@@ -200,9 +228,9 @@ async function loadMovieDetail() {
                         <span class="votes">(${totalCommunityVotes} votos comunidad)</span>
                     </div>
                     <div class="action-buttons">
-                        <button class="list-btn fav">❤️ Favoritas</button>
-                        <button class="list-btn pending">⏰ Pendientes</button>
-                        <button class="list-btn watched">✅ Vistas</button>
+                        <button class="list-btn fav"> Favoritas</button>
+                        <button class="list-btn pending"> Pendientes</button>
+                        <button class="list-btn watched"> Vistas</button>
                     </div>
                     <div class="synopsis">
                         <h3>Sinopsis</h3>
@@ -250,14 +278,14 @@ async function loadMovieDetail() {
             </div>
         `;
 
-        // Reseñas de la comunidad (locales)
+        // Reseñas de la comunidad (locales) - con nombre clickeable
         html += `<div class="reviews-section"><h3>Reseñas de la comunidad de Viperdbox</h3>`;
         if (localReviews.length > 0) {
             localReviews.forEach(review => {
                 html += `
                     <div class="review-card">
                         <div class="review-header">
-                            <span class="review-author">${review.user_name}</span>
+                            <span class="review-author" data-user-id="${review.user_id}" style="cursor: pointer;">${review.user_name}</span>
                             <span class="review-rating">⭐ ${review.rating}/10</span>
                             <span class="review-date">${new Date(review.created_at).toLocaleDateString()}</span>
                         </div>
@@ -416,6 +444,17 @@ async function loadMovieDetail() {
             });
         }
 
+        // 5. Click en nombre del autor de la reseña (para ir a su perfil)
+        container.addEventListener('click', (e) => {
+            const authorSpan = e.target.closest('.review-author');
+            if (authorSpan && authorSpan.dataset.userId) {
+                const userId = authorSpan.dataset.userId;
+                // No permitir ir a tu propio perfil desde una reseña tuya (opcional)
+                // Si quieres evitar, puedes comparar con el ID del usuario actual (necesitas obtenerlo del token)
+                window.location.href = `/otherProfile.html?id=${userId}`;
+            }
+        });
+
     } catch (err) {
         console.error('Error en loadMovieDetail:', err);
         container.innerHTML = '<div class="error-container"><p>Error de conexión. Intenta de nuevo más tarde.</p><button class="back-btn" onclick="window.location.href=\'/catalog.html\'">← Volver al catálogo</button></div>';
@@ -553,6 +592,85 @@ async function loadMyProfile() {
     } catch (err) {
         console.error('Error en loadMyProfile:', err);
         document.getElementById('profileInfo').innerHTML = '<p>Error al cargar perfil. Revisa tu conexión.</p>';
+    }
+}
+async function loadOtherProfile(userId) {
+    const token = getToken();
+    if (!token) {
+        window.location.href = '/login.html';
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/profile/user/${userId}`, { headers: getHeaders() });
+        const data = await res.json();
+        if (!res.ok || !data.user) {
+            document.getElementById('profileName').textContent = 'Error';
+            return;
+        }
+
+        const user = data.user;
+        document.getElementById('profileName').textContent = user.name;
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profileSince').textContent = new Date(user.created_at).toLocaleDateString();
+        document.getElementById('userNameSpan').textContent = user.name;
+        document.getElementById('userNameListSpan').textContent = user.name;
+
+        // Reseñas
+        const reviewsDiv = document.getElementById('otherReviews');
+        if (data.reviews && data.reviews.length > 0) {
+            reviewsDiv.innerHTML = data.reviews.map(r => `
+                <div class="review-item">
+                    <strong>${r.movie_title}</strong> - ⭐ ${r.rating}/10<br>
+                    ${r.content}<br>
+                    <small>${new Date(r.created_at).toLocaleDateString()}</small>
+                </div>
+            `).join('');
+        } else {
+            reviewsDiv.innerHTML = '<p>Este usuario no ha escrito ninguna reseña aún.</p>';
+        }
+
+        // Listas
+        const listsContainer = document.getElementById('otherLists');
+        const lists = data.lists || [];
+        if (lists.length === 0) {
+            listsContainer.innerHTML = '<p>Este usuario no tiene películas en listas.</p>';
+        } else {
+            listsContainer.innerHTML = '';
+            let favCount = 0, pendCount = 0, viewCount = 0;
+            for (const list of lists) {
+                const listName = list.name;
+                const movies = list.movies || [];
+                if (listName === 'favoritas') favCount = movies.length;
+                else if (listName === 'pendientes') pendCount = movies.length;
+                else if (listName === 'vistas') viewCount = movies.length;
+
+                const listDiv = document.createElement('div');
+                listDiv.className = 'list-section';
+                const displayName = listName.charAt(0).toUpperCase() + listName.slice(1);
+                listDiv.innerHTML = `<h3>${displayName}</h3><div class="list-movies"></div>`;
+                const moviesDiv = listDiv.querySelector('.list-movies');
+                if (movies.length === 0) {
+                    moviesDiv.innerHTML = '<p>No hay películas en esta lista.</p>';
+                } else {
+                    movies.forEach(movie => {
+                        const link = document.createElement('a');
+                        link.href = `/movieDetail.html?id=${movie.id}`;
+                        link.textContent = movie.title;
+                        link.className = 'list-movie-link';
+                        moviesDiv.appendChild(link);
+                        moviesDiv.appendChild(document.createElement('br'));
+                    });
+                }
+                listsContainer.appendChild(listDiv);
+            }
+            document.getElementById('favCount').textContent = favCount;
+            document.getElementById('pendCount').textContent = pendCount;
+            document.getElementById('viewCount').textContent = viewCount;
+        }
+    } catch (err) {
+        console.error(err);
+        document.getElementById('profileName').textContent = 'Error al cargar';
     }
 }
 

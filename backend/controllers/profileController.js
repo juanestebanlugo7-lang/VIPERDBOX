@@ -59,3 +59,17 @@ exports.checkInList = async (req, res) => {
         res.status(500).json({ error: 'Error al verificar' });
     }
 };
+// Obtener perfil de otro usuario (datos públicos + reseñas + listas)
+exports.getOtherProfile = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+        const reviews = await Review.getByUser(userId);
+        const lists = await List.getUserListsWithMovies(userId);
+        res.json({ user, reviews, lists });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener perfil' });
+    }
+};

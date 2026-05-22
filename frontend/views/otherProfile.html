@@ -1,22 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Perfil de usuario - Viperdbox</title>
-  <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de usuario - Viperdbox</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <nav class="navbar">
-    <a href="catalog.html" class="logo">VIPERDBOX</a>
-    <div class="nav-links">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="profile.html">Mi Perfil</a>
-      <a href="#" id="logout-btn">Cerrar sesión</a>
+    <div class="navbar">
+        <div class="logo"><a href="/catalog.html">VIPERDBOX</a></div>
+        <div class="nav-links">
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/catalog.html">Películas</a>
+            <a href="/profile.html">Mi Perfil</a>
+            <a id="logoutBtn" style="cursor: pointer;">Cerrar sesión</a>
+        </div>
     </div>
-  </nav>
-  <div class="container" id="other-profile-container">
-    <!-- Cargado dinámicamente -->
-  </div>
-  <script src="/js/main.js"></script>
+
+    <div class="container">
+        <div class="profile-card">
+            <h2 id="profileName">Cargando...</h2>
+            <p id="profileEmail"></p>
+            <p>Miembro desde: <span id="profileSince"></span></p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-number" id="favCount">0</div>
+                <div class="stat-label">Favoritas</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="pendCount">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="viewCount">0</div>
+                <div class="stat-label">Vistas</div>
+            </div>
+        </div>
+
+        <h2>Reseñas escritas por <span id="userNameSpan"></span></h2>
+        <div id="otherReviews" class="review-list"><p>Cargando reseñas...</p></div>
+
+        <h2>Listas de <span id="userNameListSpan"></span></h2>
+        <div id="otherLists" class="lists-container"><p>Cargando listas...</p></div>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('id');
+        if (userId) loadOtherProfile(userId);
+        else window.location.href = '/catalog.html';
+    </script>
 </body>
 </html>
