@@ -12,4 +12,3 @@ ViperdBox es una aplicacion web social para descubir, calificar, hacer reseñas 
 ## Enlaces importantes
 
 - [Repositorio en GitHub](https://github.com/juanestebanlugo7-lang/viperdbox)
-- [Documentación completa](https://juanestebanlugo7-lang.gitbook.io/viperdbox)
