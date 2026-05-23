@@ -111,46 +111,114 @@ frontend/
 ## Base de Datos (PostgreSQL)
 
 **Tablas principales:**
-Users
-| Campo | Tipo| Descripcion|
-| Id    |Serial| PK|
-| name  |Vachar(100)| 
-| email | Varchar(255)|unico|
-|password|Varchar(255)| Hash BCrypt|
-|role    |Varchar(20)| "user" o "admin"|
-|create_at| TIMESTAMP
+1. Users
+- Campo : Id
+- Tipo : Serial
+- Descripcion: PK.
 
-reviews
-| Campo | Tipo| Descripcion|
-| id    |SERIAL | PK|
-|user_id|INT | FK a users(id)
-|movie_id | INT | ID TMDB|
-| movie_title| VARCHAR(255)| cache|
-|content | TEXT |
-|rating |INT | 1-10 |
-|like_count| INT |
-|created_at | TIMESTAMP|
+- Campo : name
+- Tipo : Varchar(100)
+- Descripcion:
 
-review_likes
-| Campo | Tipo |
-|id | SERIAL PK|
-|user_id| INT FK|
-|review_id| INT FK|
-| created_at| TIMESTAMP
+- Campo : email
+- Tipo : Varchar(255)
+- Descripcion: unico
 
-lists
-| Campo | Tipo |
-|id | SERIAL PK|
-|user_id | INT FK|
-|name | VARCHAR (50)|
+- Campo : password
+- Tipo : Varchar(255)
+- Descripcion: Hash BCrypt
 
-list_movies
-| Campo | Tipo |
-|id     | SERIAL PK|
-|list_id | INT FK|
-|movie_id|INT|
-|movie_title| VARCHAR (255)
-|added_at | TIMESTAMP|
+- Campo : role
+- Tipo : Varchar(20)
+- Descripcion: "user" o "admin"
+
+- Campo : create_at
+- Tipo : TIMESTAMP
+- Descripcion:
+
+2. reviews
+- Campo : id
+- Tipo : SERIAL
+- Descripcion: PK
+
+- Campo : user_id
+- Tipo : INT
+- Descripcion: FK a users(id)
+
+- Campo : movie_id
+- Tipo : INT
+- Descripcion: ID TMDB
+
+- Campo : movie_title
+- Tipo : VARCHAR(255)
+- Descripcion: cache
+
+- Campo : content
+- Tipo : TEXT
+- Descripcion:
+
+- Campo : rating
+- Tipo : INT
+- Descripcion: 1-10
+
+- Campo : like_count
+- Tipo : INT
+- Descripcion:
+
+- Campo : created_at
+- Tipo : TIMESTAMP
+- Descripcion:
+
+3. review_likes
+- Campo : id
+- Tipo : SERIAL PK
+- Descripcion:
+
+- Campo : user_id
+- Tipo : INT FK
+- Descripcion:
+
+- Campo : review_id
+- Tipo : INT FK
+- Descripcion:
+
+- Campo : created_at
+- Tipo : TIMESTAMP
+- Descripcion:
+
+4. lists
+- Campo : id
+- Tipo : SERIAL PK
+- Descripcion:
+
+- Campo : user_id
+- Tipo : INT FK
+- Descripcion:
+
+- Campo : name
+- Tipo : VARCHAR(50)
+- Descripcion:
+
+5. list_movies
+- Campo : id
+- Tipo : SERIAL PK
+- Descripcion:
+
+- Campo : list_id
+- Tipo : INT FK
+- Descripcion:
+
+- Campo : movie_id
+- Tipo : INT
+- Descripcion:
+
+- Campo : movie_title
+- Tipo : VARCHAR(255)
+- Descripcion:
+
+- Campo : added_at
+- Tipo : TIMESTAMP
+- Descripcion:
 
 
 
