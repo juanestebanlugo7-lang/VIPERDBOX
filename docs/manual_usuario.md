@@ -42,10 +42,10 @@ Cuando hayas iniciado sesion la pantalla principal sera el "catalogo" en este ve
 
 ### 3.2. Limpiar la búsqueda
 
-- Haz clic en el botón "Limpiar"para volver a ver las películas populares.
+- Haz clic en el botón "Limpiar" para volver a ver las películas populares.
 
 ### 3.3. Paginación
-- usa los botones "◀" (anterior), losn numeros de pagin y "▶"(siguiente) para navegar entre los resultados.
+- usa los botones "◀" (anterior), los numeros de paginas y "▶"(siguiente) para navegar entre los resultados.
 - cada pagina muestra 20 peliculas.
 
 ### 3.4. Ver el detalle de una película
@@ -167,7 +167,7 @@ R1: Por el momento no hay una opción desde la interfaz. Contacta al administrad
 R2: Solo los administradores pueden eliminar reseñas. Si necesitas eliminar una reseña propia, pídele al administrador que lo haga.
 
 **P3: ¿Puedo agregar una misma película a varias listas?**  
-R3: Las peliculas puedn esta en todas las listas.
+R3: Las peliculas pueden esta en todas las listas.
 
 **P4: ¿Se pueden buscar películas por género o año?**  
 R5: Por ahora, la búsqueda solo es por título. Los filtros de género y año no están implementados.
@@ -177,14 +177,13 @@ R6: El rol se asigna directamente en la base de datos. Contacta con el equipo de
 
 ## 12. Glosario
 
-- **API:** Interfaz de programación que permite que dos aplicaciones se comuniquen.
-- **Bootstrap:** Framework de diseño web para crear interfaces responsivas.
-- **JWT (JSON Web Token):** Token seguro para autenticación entre cliente y servidor.
-- **PostgreSQL:** Sistema de gestión de bases de datos relacional.
-- **TMDB (The Movie Database):** Base de datos en línea que proporciona información de películas.
-- **Spring Boot:** Framework de Java para el desarrollo de backend.
-- 
+- "API" Interfaz de programación que permite que dos aplicaciones se comuniquen.
+- "Bootstrap" Framework de diseño web para crear interfaces responsive.
+- "JWT (JSON Web Token)": Token seguro para autenticación entre cliente y servidor.
+- "PostgreSQL" Sistema de gestión de bases de datos relacional.
+- "TMDB (The Movie Database)"Base de datos en línea que proporciona información de películas.
+- "Spring Boot" Framework de Java para el desarrollo de backend.
 ## 13. Contacto y soporte
 
 Si encuentras algún problema no cubierto en este manual, puedes contactar al equipo de desarrollo a través del repositorio oficial de GitHub:  
-[https://github.com/juanestebanlugo7-lang/viperdbox]
+- [Repositorio en GitHub](https://github.com/juanestebanlugo7-lang/viperdbox)

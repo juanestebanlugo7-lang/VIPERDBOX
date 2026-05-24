@@ -68,14 +68,15 @@
 ## Backend 
 **Estructura de carpetas**:
 backend/
-├── config/ # Configuración BD, seguridad
-├── controllers/ # Controladores REST
-├── middleware/ # Autenticación JWT y verificación de admin
-├── models/ # Entidades y acceso a datos
-├── routes/ # Definición de endpoints
-├── services/ # Servicios (TMDB)
-├── .env
-└── server.js
+- config (Configuracion BD, seguridad)
+- Contlolers (Controladores)
+- middleware (Autenticacion JWT y verificacion admin)
+- models (Entidades y acceso a datos)
+- routes (Definicion de endppoints)
+- services (Servicios-TMBD)
+- .env
+- server.js
+
 **Controladores principales:**
 - authController.js: Registro, login, generacion de  JWT.
 - movieController.js: Peliculas (Populasres, busqueda, detalle, reseñas, likes, promedio).
@@ -95,9 +96,10 @@ backend/
 **Estructura de carpetas:**
 
 frontend/
-├── views/  Archivos HTML
-├── css/styles.css
-└── js/main.js
+- views (Archivos HTML)
+- css (style.css)
+- js (main.js)
+
 **Funciones principales en main.js:**
 
 - login(), register(), logout() – autenticación.
