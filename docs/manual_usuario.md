@@ -3,7 +3,7 @@
 **Aplicación:** Viperdbox  
 **Equipo de desarrollo:** The Reservoir Dogs  
 ## 1. Introducción
-Viperdbox es un aaplicacionweb social que te permitira descubir, reseñar y organizar tu peliculas en lista personalizadas (Pendientes, vistas, favoritas) estas fuertemente inspirada en plataformas como Letterboxd.
+Viperdbox es un aplicacion web social que te permitira descubir, reseñar y organizar tu peliculas en lista personalizadas (Pendientes, vistas, favoritas) estas fuertemente inspirada en plataformas como Letterboxd.
 ---
 
 ## 2. Primeros pasos
