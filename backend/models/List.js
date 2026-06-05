@@ -31,7 +31,7 @@ class List {
     }
 
     // Agregar película a una lista (con título)
-    /*static async addMovieToList(userId, listName, movieId, movieTitle) {
+    static async addMovieToList(userId, listName, movieId, movieTitle) {
         const listResult = await db.query(
             'SELECT id FROM lists WHERE user_id = $1 AND name = $2',
             [userId, listName]
@@ -45,38 +45,8 @@ class List {
             [listId, movieId, movieTitle]
         );
         return true;
-    }*/
-   static async addMovieToList(userId, listName, movieId, movieTitle) {
-    console.log('addMovieToList called with:', { userId, listName, movieId, movieTitle });
-    const listResult = await db.query(
-        'SELECT id FROM lists WHERE user_id = $1 AND name = $2',
-        [userId, listName]
-    );
-    if (listResult.rows.length === 0) {
-        console.log('❌ Lista no encontrada');
-        return false;
     }
-    const listId = listResult.rows[0].id;
-    console.log('listId encontrado:', listId);
-    try {
-        const result = await db.query(
-            `INSERT INTO list_movies (list_id, movie_id, movie_title)
-             VALUES ($1, $2, $3)
-             ON CONFLICT (list_id, movie_id) DO NOTHING
-             RETURNING id`,
-            [listId, movieId, movieTitle]
-        );
-        console.log('Resultado de INSERT:', result);
-        if (result.rows.length === 0) {
-            console.log('⚠️ Ya existía (ON CONFLICT DO NOTHING)');
-            return true; // ya existía, pero consideramos éxito
-        }
-        return true;
-    } catch (err) {
-        console.error('🔥 Error en INSERT:', err);
-        return false;
-    }
-}
+   
 
     // Eliminar película de una lista
     static async removeMovieFromList(userId, listName, movieId) {
